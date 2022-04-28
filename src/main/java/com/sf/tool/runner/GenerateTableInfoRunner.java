@@ -48,14 +48,16 @@ public class GenerateTableInfoRunner implements CommandLineRunner {
                 throw new RuntimeException(e);
             }
         });
+        
+        for (String prefix : this.tablePrefix.split(",")) {
+            List<Table> tableList = this.schemaInfoService.getTableList(prefix);
 
-        List<Table> tableList = this.schemaInfoService.getTableList(this.tablePrefix);
-
-        tableList.stream().forEach(t -> {
-           this.applicationContext.getBeansOfType(TableJavaGenerator.class).values().stream()
-               .forEach(c -> c.accept(t));
-           this.applicationContext.getBeansOfType(TableFormGroupGenerator.class).values().stream()
-               .forEach(c -> c.accept(t));
-        });
+            tableList.stream().forEach(t -> {
+               this.applicationContext.getBeansOfType(TableJavaGenerator.class).values().stream()
+                   .forEach(c -> c.accept(t));
+               this.applicationContext.getBeansOfType(TableFormGroupGenerator.class).values().stream()
+                   .forEach(c -> c.accept(t));
+            });
+        }
     }
 }

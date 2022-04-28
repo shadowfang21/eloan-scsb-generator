@@ -110,6 +110,10 @@ public class CodeListRunner implements CommandLineRunner {
             	if (def.getCodeId() == null) {
             		setCodeId(def, cmnCodeListDefDao.getNextCodeId());
             		try {
+            		    
+            		    System.out.println(SqlConverter.toDeleteDefSql(def));
+            		    System.out.println(SqlConverter.toDeleteListSql(def));
+            		    
             			String sql = SqlConverter.toSql(def);
             			
 						cmnCodeListDefDao.save(sql);
@@ -123,6 +127,21 @@ public class CodeListRunner implements CommandLineRunner {
 						System.out.println(e.getMessage());
 					}
             	}
+            }
+        } else {
+            try {
+                System.out.println(SqlConverter.toDeleteDefSql(def));
+                System.out.println(SqlConverter.toDeleteListSql(def));
+                
+                String sql = SqlConverter.toSql(def);
+                
+                System.out.println(sql + ";");
+                
+                def.getCmnCodeList().stream()
+                    .map(r -> SqlConverter.toSql(r) + ";")
+                    .forEach(System.out::println);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -196,6 +215,12 @@ public class CodeListRunner implements CommandLineRunner {
                     final String[] split = line.trim().replace("", "").split(splitor);
                     code.setCodeValue(split[0].trim());
                     code.setCodeDescription(split[1].trim());
+                    if (split.length > 2) {
+                        code.setDelFlag(split[2].trim());
+                    }
+                    if (split.length > 3) {
+                        code.setCategoryId(split[3].trim());
+                    }
                     code.setOrderId(idx.getAndIncrement());
                     return code;
                 }).collect(Collectors.toList());

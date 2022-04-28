@@ -9,6 +9,13 @@ import com.sf.tool.entity.CmnCodeListPo;
      return (str == null) ? "NULL" : ("'" + str + "'");
    }
    
+   public static String toDeleteDefSql(CmnCodeListDefPo data) {
+       return String.format("delete from cmn_code_list_def where code_id = %s;", data.getCodeId());
+   }
+   public static String toDeleteListSql(CmnCodeListDefPo data) {
+       return String.format("delete from CMN_CODE_LIST where code_id = %s;", data.getCodeId());
+   }
+   
    public static String toSql(CmnCodeListDefPo data) {
      return String.format("INSERT INTO CMN_CODE_LIST_DEF (CODE_ID,CODE_DESCRIPTION,DEL_FLAG,DATA_LENGTH,PARENT_ID,CODE_NAME) VALUES (%s,%s,%s,%s,%s,%s)", new Object[] {
            
